@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gemini 3 Seoul Hackathon Timer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1a2e;
+    color: #fff;
+    font-family: system-ui, -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .label {
+    font-size: 1.4rem;
+    color: #8888aa;
+    letter-spacing: 0.1em;
+  }
+  .timer {
+    font-size: 7rem;
+    font-weight: 200;
+    letter-spacing: 0.05em;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .progress-container {
+    width: 400px;
+    max-width: 80vw;
+    height: 6px;
+    background: #2a2a4e;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #4285f4, #ea4335);
+    border-radius: 3px;
+    width: 0%;
+    transition: width 1s linear;
+  }
+  .times-up {
+    color: #e04a5e;
+    animation: pulse 1s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    max-width: 480px;
+    width: 90vw;
+    margin-top: 0.5rem;
+  }
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: #e8e8f0;
+  }
+  .card-row {
+    display: flex;
+    font-size: 0.85rem;
+    line-height: 1.8;
+    color: #aaaacc;
+  }
+  .card-row .key {
+    min-width: 90px;
+    color: #7777aa;
+    flex-shrink: 0;
+  }
+  .card-row .val {
+    color: #ccccee;
+  }
+  .card-link {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1.2rem;
+    background: linear-gradient(135deg, #4285f4, #6a5af0);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+  .card-link:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+<div class="label">TARGET 17:00</div>
+<div class="timer" id="timer">00:00:00</div>
+<div class="progress-container">
+  <div class="progress-bar" id="progress"></div>
+</div>
+<div class="card">
+  <div class="card-title">Gemini 3 서울 해커톤</div>
+  <div class="card-row"><span class="key">Date</span><span class="val">February 28, 2026</span></div>
+  <div class="card-row"><span class="key">Location</span><span class="val">Seoul, South Korea (In-person)</span></div>
+  <div class="card-row"><span class="key">Hosts</span><span class="val">Cerebral Valley, Google DeepMind, AttentionX</span></div>
+  <div class="card-row"><span class="key">Prize</span><span class="val">$100,000 USD Gemini API Credits + Google AI Future Fund Meeting</span></div>
+  <div class="card-row"><span class="key">Team</span><span class="val">Max 4 members</span></div>
+  <a class="card-link" href="https://cerebralvalley.ai/e/gemini-3-seoul-hackathon/details" target="_blank">Event Details &rarr;</a>
+</div>
+<script>
+  const now = new Date();
+  const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 17, 0, 0);
+  const startTime = now.getTime();
+  const totalDuration = target.getTime() - startTime;
+
+  function update() {
+    const current = new Date();
+    const diff = target.getTime() - current.getTime();
+    const timerEl = document.getElementById('timer');
+    const progressEl = document.getElementById('progress');
+
+    if (diff <= 0) {
+      timerEl.textContent = "TIME'S UP!";
+      timerEl.classList.add('times-up');
+      progressEl.style.width = '100%';
+      return;
+    }
+
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    timerEl.textContent =
+      String(h).padStart(2, '0') + ':' +
+      String(m).padStart(2, '0') + ':' +
+      String(s).padStart(2, '0');
+
+    if (totalDuration > 0) {
+      const elapsed = current.getTime() - startTime;
+      const pct = Math.min((elapsed / totalDuration) * 100, 100);
+      progressEl.style.width = pct + '%';
+    }
+  }
+
+  update();
+  setInterval(update, 1000);
+</script>
+</body>
+</html>
