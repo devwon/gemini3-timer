@@ -114,7 +114,7 @@
 <script>
   const now = new Date();
   const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 17, 0, 0);
-  const startTime = now.getTime();
+  const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 10, 20, 0).getTime();
   const totalDuration = target.getTime() - startTime;
 
   function update() {
